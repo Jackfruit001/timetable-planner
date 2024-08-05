@@ -18,13 +18,12 @@ import oldTimetableScript from '../timetable';
 
 import styles from './App.module.css';
 
-
 const App = memo(() => {
     const { data } = useQuery({
         queryKey: ["data"],
         queryFn: () =>
             axios
-                .get(API_PATH + 'json/data.php')
+                .get(`${API_PATH}data.php`)  // Ensure the path is correct
                 .then((res) => res.data),
         refetchInterval: 0,
     });

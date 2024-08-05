@@ -1,11 +1,27 @@
 <?php
-    header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: *");
 
-    if (isset($_GET["term"]) && preg_match("/^\d{4}$/", $_GET["term"])) {
-        $output = json_decode(file_get_contents("./data/courseInfo_" . $_GET["term"] . ".json"));
+$dataDir = __DIR__ . '/data/';
+
+if (isset($_GET["term"]) && preg_match("/^\d{4}$/", $_GET["term"])) {
+    $filePath = $dataDir . "courseInfo_" . $_GET["term"] . ".json";
+    if (file_exists($filePath)) {
+        $output = json_decode(file_get_contents($filePath));
     } else {
-        $output = json_decode(file_get_contents("./data/courseInfo.json"));
+        http_response_code(404);
+        echo json_encode(["error" => "Data for the specified term not found."]);
+        exit;
     }
+} else {
+    $filePath = $dataDir . "courseInfo.json";
+    if (file_exists($filePath)) {
+        $output = json_decode(file_get_contents($filePath));
+    } else {
+        http_response_code(404);
+        echo json_encode(["error" => "Default data not found."]);
+        exit;
+    }
+}
 
-    print json_encode($output);
+echo json_encode($output);
 ?>
